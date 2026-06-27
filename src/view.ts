@@ -128,10 +128,6 @@ export class ApiUsageDashboardView extends ItemView {
       }
     }
 
-    if (this.plugin.settings.displayOptions.showHeatmap) {
-      this.renderHeatmap(card, result);
-    }
-
     if (result.note && this.plugin.settings.displayOptions.showNotes) {
       card.createDiv({ cls: "api-usage-note", text: result.note });
     }
@@ -219,7 +215,7 @@ export class ApiUsageDashboardView extends ItemView {
     const max = Math.max(...buckets.map((bucket) => bucket.value), 0);
     const kind = history[history.length - 1]?.kind;
     for (const bucket of buckets) {
-    const level = this.heatmapLevel(bucket.value, max);
+      const level = this.heatmapLevel(bucket.value, max);
       const cell = grid.createSpan({ cls: `api-usage-heatmap-cell level-${level}` });
       cell.setAttr("title", this.heatmapTooltip(bucket, kind));
     }
@@ -513,30 +509,6 @@ export class ApiUsageDashboardView extends ItemView {
     const bar = parent.createDiv({ cls: "api-usage-percent-bar" });
     const fill = bar.createDiv({ cls: "api-usage-percent-fill" });
     fill.style.width = `${Math.max(0, Math.min(percent, 100))}%`;
-  }
-
-  private renderHeatmap(parent: HTMLElement, result: ProviderQuotaResult): void {
-    const history = this.plugin.getUsageHistory(result.providerId);
-    const buckets = this.heatmapBuckets(history);
-    const panel = parent.createDiv({ cls: "api-usage-heatmap" });
-    const header = panel.createDiv({ cls: "api-usage-heatmap-header" });
-    header.createSpan({ text: "最近 7 天用量热力图" });
-    header.createSpan({ text: this.heatmapLegend(history) });
-
-    if (!history.length) {
-      panel.createDiv({ cls: "api-usage-heatmap-empty", text: "刷新后开始记录本地用量历史。" });
-      return;
-    }
-
-    const grid = panel.createDiv({ cls: "api-usage-heatmap-grid" });
-    const max = Math.max(...buckets.map((bucket) => bucket.value), 0);
-    for (const bucket of buckets) {
-      const level = this.heatmapLevel(bucket.value, max);
-      const cell = grid.createSpan({ cls: `api-usage-heatmap-cell level-${level}` });
-      const tooltip = this.heatmapTooltip(bucket, history[history.length - 1]?.kind);
-      cell.setAttr("aria-label", tooltip);
-      cell.setAttr("title", tooltip);
-    }
   }
 
   private heatmapBuckets(history: UsageHistorySample[]): Array<{ key: string; label: string; value: number; models: Map<string, number> }> {

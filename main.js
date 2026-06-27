@@ -1210,7 +1210,8 @@ var DEFAULT_PROVIDER_CONFIG = {
 };
 var DEFAULT_SETTINGS = {
   currency: "CNY",
-  refreshIntervalMinutes: 30,
+  refreshIntervalMinutes: 0,
+  autoSamplingMigratedFromDefault: false,
   displayOptions: {
     showBalance: true,
     showUsage: true,
@@ -1358,9 +1359,6 @@ var ApiUsageDashboardView = class extends import_obsidian.ItemView {
         item.createDiv({ cls: "api-usage-metric-value", text: metric.value });
         this.renderMetricBar(item, metric);
       }
-    }
-    if (this.plugin.settings.displayOptions.showHeatmap) {
-      this.renderHeatmap(card, result2);
     }
     if (result2.note && this.plugin.settings.displayOptions.showNotes) {
       card.createDiv({ cls: "api-usage-note", text: result2.note });
@@ -1695,28 +1693,6 @@ var ApiUsageDashboardView = class extends import_obsidian.ItemView {
     const fill = bar.createDiv({ cls: "api-usage-percent-fill" });
     fill.style.width = `${Math.max(0, Math.min(percent, 100))}%`;
   }
-  renderHeatmap(parent, result2) {
-    var _a;
-    const history = this.plugin.getUsageHistory(result2.providerId);
-    const buckets = this.heatmapBuckets(history);
-    const panel = parent.createDiv({ cls: "api-usage-heatmap" });
-    const header = panel.createDiv({ cls: "api-usage-heatmap-header" });
-    header.createSpan({ text: "\u6700\u8FD1 7 \u5929\u7528\u91CF\u70ED\u529B\u56FE" });
-    header.createSpan({ text: this.heatmapLegend(history) });
-    if (!history.length) {
-      panel.createDiv({ cls: "api-usage-heatmap-empty", text: "\u5237\u65B0\u540E\u5F00\u59CB\u8BB0\u5F55\u672C\u5730\u7528\u91CF\u5386\u53F2\u3002" });
-      return;
-    }
-    const grid = panel.createDiv({ cls: "api-usage-heatmap-grid" });
-    const max = Math.max(...buckets.map((bucket) => bucket.value), 0);
-    for (const bucket of buckets) {
-      const level = this.heatmapLevel(bucket.value, max);
-      const cell = grid.createSpan({ cls: `api-usage-heatmap-cell level-${level}` });
-      const tooltip = this.heatmapTooltip(bucket, (_a = history[history.length - 1]) == null ? void 0 : _a.kind);
-      cell.setAttr("aria-label", tooltip);
-      cell.setAttr("title", tooltip);
-    }
-  }
   heatmapBuckets(history) {
     var _a;
     const now = /* @__PURE__ */ new Date();
@@ -1922,10 +1898,6 @@ var ApiUsageDashboardPlugin = class extends import_obsidian2.Plugin {
       });
     }
     this.app.workspace.revealLeaf(leaf);
-    const view = leaf.view;
-    if (view instanceof ApiUsageDashboardView) {
-      void view.refresh({ silent: true });
-    }
   }
   getProviderConfig(provider) {
     return mergeProviderConfig(provider.defaultBaseUrl, this.settings.providers[provider.id]);
@@ -1992,12 +1964,18 @@ var ApiUsageDashboardPlugin = class extends import_obsidian2.Plugin {
     if (!enabledProviders.length) {
       return [];
     }
-    const results = await Promise.all(enabledProviders.map((provider) => this.fetchProviderQuota(provider)));
+    const results = [];
+    for (const provider of enabledProviders) {
+      results.push(await this.fetchProviderQuota(provider));
+    }
     await this.recordUsageHistory(results);
     return results;
   }
   registerAutoSampling() {
-    const intervalMinutes = this.settings.refreshIntervalMinutes > 0 ? this.settings.refreshIntervalMinutes : DEFAULT_SETTINGS.refreshIntervalMinutes;
+    const intervalMinutes = this.settings.refreshIntervalMinutes;
+    if (intervalMinutes <= 0) {
+      return;
+    }
     this.registerInterval(window.setInterval(() => {
       void this.sampleEnabledProviders();
     }, intervalMinutes * 60 * 1e3));
@@ -2220,9 +2198,22 @@ var ApiUsageDashboardPlugin = class extends import_obsidian2.Plugin {
       },
       usageHistory: (_c = saved == null ? void 0 : saved.usageHistory) != null ? _c : {}
     };
-    this.settings.refreshIntervalMinutes = this.settings.refreshIntervalMinutes > 0 ? this.settings.refreshIntervalMinutes : DEFAULT_SETTINGS.refreshIntervalMinutes;
+    let shouldSaveSettings = false;
+    if (!this.settings.autoSamplingMigratedFromDefault && this.settings.refreshIntervalMinutes === 30) {
+      this.settings.refreshIntervalMinutes = 0;
+      shouldSaveSettings = true;
+    } else {
+      this.settings.refreshIntervalMinutes = this.settings.refreshIntervalMinutes > 0 ? this.settings.refreshIntervalMinutes : 0;
+    }
+    if (!this.settings.autoSamplingMigratedFromDefault) {
+      this.settings.autoSamplingMigratedFromDefault = true;
+      shouldSaveSettings = true;
+    }
     for (const provider of PROVIDERS) {
       this.settings.providers[provider.id] = this.getProviderConfig(provider);
+    }
+    if (shouldSaveSettings) {
+      await this.saveSettings();
     }
   }
   async saveSettings() {
@@ -2289,8 +2280,8 @@ var ApiUsageDashboardSettingTab = class extends import_obsidian2.PluginSettingTa
         new import_obsidian2.Notice("Tokboard\uFF1A\u5DF2\u5C1D\u8BD5\u5199\u5165\u52A0\u5BC6\u5F52\u6863\u3002");
       });
     });
-    new import_obsidian2.Setting(globalSettings).setName("\u81EA\u52A8\u5237\u65B0\u95F4\u9694").setDesc("\u9ED8\u8BA4\u6BCF 30 \u5206\u949F\u540E\u53F0\u91C7\u6837\u4E00\u6B21\uFF1B\u6253\u5F00 Dashboard \u65F6\u4E5F\u4F1A\u81EA\u52A8\u91C7\u6837\u3002\u586B 0 \u4F1A\u5728\u4E0B\u6B21\u52A0\u8F7D\u65F6\u6062\u590D\u9ED8\u8BA4 30\u3002").addText((text) => {
-      text.setPlaceholder("30").setValue(String(this.plugin.settings.refreshIntervalMinutes)).onChange((value) => {
+    new import_obsidian2.Setting(globalSettings).setName("\u81EA\u52A8\u5237\u65B0\u95F4\u9694").setDesc("\u5355\u4F4D\uFF1A\u5206\u949F\u3002\u586B 0 \u8868\u793A\u5173\u95ED\u540E\u53F0\u91C7\u6837\uFF0C\u5EFA\u8BAE\u4FDD\u6301 0 \u5E76\u624B\u52A8\u5237\u65B0\uFF0C\u53EF\u51CF\u5C11\u6253\u5F00 Obsidian \u65F6\u7684\u5361\u987F\u3002").addText((text) => {
+      text.setPlaceholder("0").setValue(String(this.plugin.settings.refreshIntervalMinutes)).onChange((value) => {
         const parsed = Number(value);
         this.plugin.settings.refreshIntervalMinutes = Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
         void this.plugin.saveSettings();

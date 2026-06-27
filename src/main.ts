@@ -49,10 +49,6 @@ export default class ApiUsageDashboardPlugin extends Plugin {
     }
 
     this.app.workspace.revealLeaf(leaf);
-    const view = leaf.view;
-    if (view instanceof ApiUsageDashboardView) {
-      void view.refresh({ silent: true });
-    }
   }
 
   getProviderConfig(provider: ProviderAdapter): ProviderConfig {
@@ -128,13 +124,19 @@ export default class ApiUsageDashboardPlugin extends Plugin {
       return [];
     }
 
-    const results = await Promise.all(enabledProviders.map((provider) => this.fetchProviderQuota(provider)));
+    const results: ProviderQuotaResult[] = [];
+    for (const provider of enabledProviders) {
+      results.push(await this.fetchProviderQuota(provider));
+    }
     await this.recordUsageHistory(results);
     return results;
   }
 
   private registerAutoSampling(): void {
-    const intervalMinutes = this.settings.refreshIntervalMinutes > 0 ? this.settings.refreshIntervalMinutes : DEFAULT_SETTINGS.refreshIntervalMinutes;
+    const intervalMinutes = this.settings.refreshIntervalMinutes;
+    if (intervalMinutes <= 0) {
+      return;
+    }
     this.registerInterval(window.setInterval(() => {
       void this.sampleEnabledProviders();
     }, intervalMinutes * 60 * 1000));
@@ -393,10 +395,24 @@ export default class ApiUsageDashboardPlugin extends Plugin {
       },
       usageHistory: saved?.usageHistory ?? {}
     };
-    this.settings.refreshIntervalMinutes = this.settings.refreshIntervalMinutes > 0 ? this.settings.refreshIntervalMinutes : DEFAULT_SETTINGS.refreshIntervalMinutes;
+    let shouldSaveSettings = false;
+    if (!this.settings.autoSamplingMigratedFromDefault && this.settings.refreshIntervalMinutes === 30) {
+      this.settings.refreshIntervalMinutes = 0;
+      shouldSaveSettings = true;
+    } else {
+      this.settings.refreshIntervalMinutes = this.settings.refreshIntervalMinutes > 0 ? this.settings.refreshIntervalMinutes : 0;
+    }
+    if (!this.settings.autoSamplingMigratedFromDefault) {
+      this.settings.autoSamplingMigratedFromDefault = true;
+      shouldSaveSettings = true;
+    }
 
     for (const provider of PROVIDERS) {
       this.settings.providers[provider.id] = this.getProviderConfig(provider);
+    }
+
+    if (shouldSaveSettings) {
+      await this.saveSettings();
     }
   }
 
@@ -509,10 +525,10 @@ class ApiUsageDashboardSettingTab extends PluginSettingTab {
 
     new Setting(globalSettings)
       .setName("自动刷新间隔")
-      .setDesc("默认每 30 分钟后台采样一次；打开 Dashboard 时也会自动采样。填 0 会在下次加载时恢复默认 30。")
+      .setDesc("单位：分钟。填 0 表示关闭后台采样，建议保持 0 并手动刷新，可减少打开 Obsidian 时的卡顿。")
       .addText((text) => {
         text
-          .setPlaceholder("30")
+          .setPlaceholder("0")
           .setValue(String(this.plugin.settings.refreshIntervalMinutes))
           .onChange((value) => {
             const parsed = Number(value);

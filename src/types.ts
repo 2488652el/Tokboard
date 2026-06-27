@@ -15,6 +15,7 @@ export interface ProviderConfig {
 export interface ApiUsageDashboardSettings {
   currency: string;
   refreshIntervalMinutes: number;
+  autoSamplingMigratedFromDefault: boolean;
   displayOptions: DisplayOptions;
   archive: ArchiveSettings;
   providers: Record<string, ProviderConfig>;

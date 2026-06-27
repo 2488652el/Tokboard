@@ -1,6 +1,6 @@
 {
   "name": "tokboard",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local-first Obsidian token usage board for AI API keys, coding plans, quota windows, and model-level history.",
   "main": "main.js",
   "type": "module",

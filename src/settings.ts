@@ -12,7 +12,8 @@ export const DEFAULT_PROVIDER_CONFIG: ProviderConfig = {
 
 export const DEFAULT_SETTINGS: ApiUsageDashboardSettings = {
   currency: "CNY",
-  refreshIntervalMinutes: 30,
+  refreshIntervalMinutes: 0,
+  autoSamplingMigratedFromDefault: false,
   displayOptions: {
     showBalance: true,
     showUsage: true,
