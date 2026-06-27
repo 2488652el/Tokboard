@@ -1,0 +1,34 @@
+{
+  "name": "tokboard",
+  "version": "0.1.0",
+  "description": "Local-first Obsidian token usage board for AI API keys, coding plans, quota windows, and model-level history.",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "lint": "eslint .",
+    "copy-to-vault": "node scripts/copy-to-vault.mjs"
+  },
+  "keywords": [
+    "obsidian",
+    "ai",
+    "api-usage",
+    "quota",
+    "tokens",
+    "coding-plan"
+  ],
+  "author": "LLM-WIKI",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/node": "^22.15.17",
+    "esbuild": "0.25.5",
+    "eslint": "^9.39.4",
+    "eslint-plugin-obsidianmd": "^0.3.0",
+    "globals": "^17.6.1",
+    "obsidian": "latest",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.59.1"
+  }
+}

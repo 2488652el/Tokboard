@@ -1,0 +1,711 @@
+.api-usage-dashboard {
+  --api-usage-border: var(--background-modifier-border);
+  --api-usage-muted: var(--text-muted);
+  --api-usage-surface: color-mix(in srgb, var(--background-secondary) 82%, var(--background-primary));
+  --api-usage-surface-soft: color-mix(in srgb, var(--background-secondary) 55%, var(--background-primary));
+  --api-usage-accent-soft: color-mix(in srgb, var(--interactive-accent) 10%, var(--background-secondary));
+  --api-usage-accent-border: color-mix(in srgb, var(--interactive-accent) 22%, var(--api-usage-border));
+  --api-usage-good: var(--color-green);
+  --api-usage-warn: var(--color-yellow);
+  --api-usage-bad: var(--color-red);
+}
+
+.api-usage-toolbar {
+  align-items: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--api-usage-border) 74%, transparent);
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding: 2px 0 14px;
+}
+
+.api-usage-actions,
+.api-usage-icon-button,
+.api-usage-provider-title,
+.api-usage-metric-label,
+.api-usage-hero-metric,
+.api-usage-summary-item {
+  align-items: center;
+  display: flex;
+}
+
+.api-usage-actions {
+  gap: 8px;
+}
+
+.api-usage-icon-button {
+  gap: 6px;
+}
+
+.api-usage-range-toggle {
+  background: var(--api-usage-surface);
+  border: 1px solid color-mix(in srgb, var(--api-usage-border) 76%, transparent);
+  border-radius: 8px;
+  display: inline-flex;
+  padding: 2px;
+}
+
+.api-usage-range-toggle button {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--api-usage-muted);
+  font-size: 12px;
+  height: 28px;
+  padding: 0 10px;
+}
+
+.api-usage-range-toggle button.is-active {
+  background: var(--background-primary);
+  border: 1px solid color-mix(in srgb, var(--api-usage-border) 70%, transparent);
+  color: var(--text-normal);
+  font-weight: 650;
+}
+
+.api-usage-title {
+  font-size: 20px;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+.api-usage-subtitle,
+.api-usage-muted {
+  color: var(--api-usage-muted);
+  font-size: 12px;
+}
+
+.api-usage-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.api-usage-section-title {
+  font-size: 14px;
+  font-weight: 750;
+  margin: 0;
+}
+
+.api-usage-detail-header {
+  border-top: 1px solid color-mix(in srgb, var(--api-usage-border) 72%, transparent);
+  margin: 20px 0 12px;
+  padding-top: 16px;
+}
+
+.api-usage-stat-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 14px;
+}
+
+.api-usage-stat-card,
+.api-usage-chart-panel {
+  background: var(--api-usage-surface);
+  border: 1px solid color-mix(in srgb, var(--api-usage-border) 78%, transparent);
+  border-radius: 8px;
+}
+
+.api-usage-stat-card {
+  min-height: 86px;
+  padding: 14px 16px;
+}
+
+.api-usage-stat-label {
+  align-items: center;
+  color: var(--api-usage-muted);
+  display: flex;
+  font-size: 12px;
+  font-weight: 600;
+  gap: 7px;
+}
+
+.api-usage-stat-value {
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-top: 9px;
+  overflow-wrap: anywhere;
+}
+
+.api-usage-stat-subtext {
+  color: var(--api-usage-muted);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.api-usage-chart-panel {
+  margin-bottom: 14px;
+  padding: 14px 16px;
+}
+
+.api-usage-chart-header,
+.api-usage-legend-inline,
+.api-usage-provider-legend,
+.api-usage-provider-legend span,
+.api-usage-pie-provider {
+  align-items: center;
+  display: flex;
+}
+
+.api-usage-chart-header {
+  font-size: 13px;
+  font-weight: 700;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.api-usage-chart-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.api-usage-legend-inline {
+  color: var(--api-usage-muted);
+  font-size: 11px;
+  gap: 6px;
+}
+
+.api-usage-global-heatmap-grid {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+}
+
+.api-usage-trend-chart {
+  align-items: end;
+  background:
+    linear-gradient(to bottom, transparent 24%, color-mix(in srgb, var(--api-usage-border) 36%, transparent) 25%, transparent 26%),
+    linear-gradient(to bottom, transparent 49%, color-mix(in srgb, var(--api-usage-border) 36%, transparent) 50%, transparent 51%),
+    linear-gradient(to bottom, transparent 74%, color-mix(in srgb, var(--api-usage-border) 36%, transparent) 75%, transparent 76%),
+    var(--api-usage-surface-soft);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(34px, 1fr);
+  height: 220px;
+  overflow-x: auto;
+  padding: 12px 10px 0;
+}
+
+.api-usage-trend-column {
+  align-items: center;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 100%;
+  min-width: 34px;
+}
+
+.api-usage-trend-stack {
+  align-self: end;
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  flex-direction: column-reverse;
+  min-height: 0;
+  overflow: hidden;
+  width: min(72px, 72%);
+}
+
+.api-usage-trend-segment {
+  cursor: help;
+  min-height: 2px;
+}
+
+.api-usage-trend-label {
+  color: var(--api-usage-muted);
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 8px;
+  white-space: nowrap;
+}
+
+.api-usage-provider-legend {
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.api-usage-provider-legend span {
+  color: var(--api-usage-muted);
+  font-size: 12px;
+  gap: 6px;
+}
+
+.api-usage-color-dot {
+  border-radius: 50%;
+  cursor: help;
+  display: inline-flex;
+  height: 10px;
+  width: 10px;
+}
+
+.api-usage-pie-layout {
+  align-items: center;
+  display: grid;
+  gap: 28px;
+  grid-template-columns: 220px 1fr;
+}
+
+.api-usage-donut {
+  align-items: center;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  width: min(210px, 100%);
+}
+
+.api-usage-donut-center {
+  align-items: center;
+  background: var(--api-usage-surface);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  font-weight: 700;
+  height: 48%;
+  justify-content: center;
+  width: 48%;
+}
+
+.api-usage-donut-center div:first-child {
+  color: var(--text-normal);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.api-usage-donut-center div:last-child {
+  color: var(--api-usage-muted);
+}
+
+.api-usage-pie-list {
+  display: grid;
+  gap: 0;
+}
+
+.api-usage-pie-row {
+  align-items: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--api-usage-border) 68%, transparent);
+  cursor: help;
+  display: flex;
+  justify-content: space-between;
+  min-height: 52px;
+}
+
+.api-usage-pie-provider {
+  gap: 10px;
+}
+
+.api-usage-summary {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  margin-bottom: 14px;
+}
+
+.api-usage-summary-item {
+  background: var(--api-usage-surface);
+  border: 1px solid color-mix(in srgb, var(--api-usage-border) 78%, transparent);
+  border-radius: 8px;
+  gap: 10px;
+  padding: 10px;
+}
+
+.api-usage-summary-icon {
+  color: var(--text-accent);
+  display: inline-flex;
+}
+
+.api-usage-summary-value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.api-usage-summary-label {
+  color: var(--api-usage-muted);
+  font-size: 11px;
+}
+
+.api-usage-card {
+  background: var(--api-usage-surface);
+  border: 1px solid var(--api-usage-accent-border);
+  border-radius: 8px;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--interactive-accent) 8%, transparent);
+  padding: 12px;
+}
+
+.api-usage-card-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.api-usage-provider-name {
+  color: var(--text-normal);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.api-usage-provider-title {
+  gap: 6px;
+}
+
+.api-usage-status-dot {
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 14%, transparent);
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 9px;
+  margin-top: 5px;
+  width: 9px;
+}
+
+.api-usage-status-dot-ready {
+  background: var(--api-usage-good);
+  color: var(--api-usage-good);
+}
+
+.api-usage-status-dot-limited,
+.api-usage-status-dot-unconfigured {
+  background: var(--api-usage-warn);
+  color: var(--api-usage-warn);
+}
+
+.api-usage-status-dot-error {
+  background: var(--api-usage-bad);
+  color: var(--api-usage-bad);
+}
+
+.api-usage-provider-icon,
+.api-usage-metric-icon,
+.api-usage-percent-ring {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.api-usage-provider-icon {
+  color: var(--interactive-accent);
+}
+
+.api-usage-percent-ring {
+  --api-usage-percent: 0%;
+  align-items: center;
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle at center, var(--api-usage-surface) 53%, transparent 54%),
+    conic-gradient(var(--interactive-accent) var(--api-usage-percent), color-mix(in srgb, var(--api-usage-border) 70%, transparent) 0);
+  border-radius: 50%;
+  color: var(--text-normal);
+  font-size: 9px;
+  font-weight: 700;
+  justify-content: center;
+  width: 22px;
+}
+
+.api-usage-percent-ring.is-hero {
+  background:
+    radial-gradient(circle at center, var(--api-usage-accent-soft) 53%, transparent 54%),
+    conic-gradient(var(--interactive-accent) var(--api-usage-percent), color-mix(in srgb, var(--api-usage-border) 70%, transparent) 0);
+  font-size: 12px;
+  width: 42px;
+}
+
+.api-usage-status {
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 11px;
+  font-weight: 650;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+.api-usage-status-ready {
+  background: color-mix(in srgb, var(--api-usage-good) 16%, transparent);
+  border-color: color-mix(in srgb, var(--api-usage-good) 38%, transparent);
+  color: var(--api-usage-good);
+}
+
+.api-usage-status-limited,
+.api-usage-status-unconfigured {
+  background: color-mix(in srgb, var(--api-usage-warn) 24%, transparent);
+  border-color: color-mix(in srgb, var(--api-usage-warn) 45%, transparent);
+  color: var(--text-normal);
+}
+
+.api-usage-status-error {
+  background: color-mix(in srgb, var(--api-usage-bad) 16%, transparent);
+  border-color: color-mix(in srgb, var(--api-usage-bad) 42%, transparent);
+  color: var(--api-usage-bad);
+}
+
+.api-usage-metrics {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.api-usage-hero-metric {
+  background: var(--api-usage-accent-soft);
+  border: 1px solid var(--api-usage-accent-border);
+  border-radius: 8px;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 12px;
+}
+
+.api-usage-hero-icon {
+  color: var(--interactive-accent);
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.api-usage-hero-value {
+  color: var(--text-normal);
+  font-size: 20px;
+  font-weight: 750;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.api-usage-hero-label {
+  color: var(--api-usage-muted);
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.api-usage-metric {
+  background: color-mix(in srgb, var(--background-secondary) 70%, var(--background-primary));
+  border: 1px solid color-mix(in srgb, var(--api-usage-border) 76%, transparent);
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.api-usage-model-metric {
+  background: color-mix(in srgb, var(--interactive-accent) 14%, var(--api-usage-surface));
+  border-color: color-mix(in srgb, var(--interactive-accent) 34%, var(--api-usage-border));
+  grid-column: 1 / -1;
+}
+
+.api-usage-model-metric .api-usage-metric-value {
+  color: var(--text-accent);
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.api-usage-metric-label {
+  color: var(--api-usage-muted);
+  font-size: 11px;
+  gap: 5px;
+}
+
+.api-usage-metric-value {
+  color: var(--text-normal);
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.api-usage-percent-bar {
+  background: color-mix(in srgb, var(--api-usage-border) 55%, transparent);
+  border-radius: 999px;
+  height: 5px;
+  margin-top: 7px;
+  overflow: hidden;
+}
+
+.api-usage-percent-fill {
+  background: var(--interactive-accent);
+  border-radius: inherit;
+  height: 100%;
+  transition: width 180ms ease;
+}
+
+.api-usage-error {
+  color: var(--api-usage-bad);
+  font-size: 12px;
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+}
+
+.api-usage-note {
+  color: var(--api-usage-muted);
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.api-usage-heatmap {
+  border-top: 1px solid color-mix(in srgb, var(--api-usage-border) 70%, transparent);
+  margin-top: 12px;
+  padding-top: 10px;
+}
+
+.api-usage-heatmap-header {
+  align-items: center;
+  color: var(--api-usage-muted);
+  display: flex;
+  font-size: 11px;
+  justify-content: space-between;
+  margin-bottom: 7px;
+}
+
+.api-usage-heatmap-grid {
+  display: grid;
+  gap: 3px;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+}
+
+.api-usage-heatmap-cell {
+  aspect-ratio: 1;
+  background: color-mix(in srgb, var(--api-usage-border) 42%, transparent);
+  border-radius: 3px;
+  cursor: help;
+  min-width: 5px;
+}
+
+.api-usage-heatmap-cell:hover {
+  outline: 1px solid var(--text-accent);
+  outline-offset: 1px;
+}
+
+.api-usage-heatmap-cell.level-1 {
+  background: color-mix(in srgb, var(--interactive-accent) 22%, var(--background-secondary));
+}
+
+.api-usage-heatmap-cell.level-2 {
+  background: color-mix(in srgb, var(--interactive-accent) 42%, var(--background-secondary));
+}
+
+.api-usage-heatmap-cell.level-3 {
+  background: color-mix(in srgb, var(--interactive-accent) 64%, var(--background-secondary));
+}
+
+.api-usage-heatmap-cell.level-4 {
+  background: var(--interactive-accent);
+}
+
+.api-usage-heatmap-empty {
+  color: var(--api-usage-muted);
+  font-size: 12px;
+}
+
+.api-usage-setting-provider {
+  border-top: 1px solid var(--background-modifier-border);
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.api-usage-template-picker,
+.api-usage-configured {
+  border: 1px solid var(--api-usage-border);
+  border-radius: 8px;
+  margin: 12px 0;
+  padding: 12px;
+}
+
+.api-usage-template-picker h3,
+.api-usage-configured h3,
+.api-usage-setting-provider h3 {
+  margin: 0 0 8px;
+}
+
+.api-usage-provider-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.api-usage-provider-chip {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 12px;
+  gap: 4px;
+  padding: 2px;
+}
+
+.api-usage-provider-chip.is-active {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.api-usage-provider-chip-select,
+.api-usage-provider-chip-delete {
+  border: 0;
+  border-radius: 999px;
+  box-shadow: none;
+  font-size: 12px;
+  height: 24px;
+  padding: 0 8px;
+}
+
+.api-usage-provider-chip-select {
+  background: transparent;
+  color: inherit;
+}
+
+.api-usage-provider-chip-delete {
+  background: color-mix(in srgb, var(--api-usage-bad) 12%, transparent);
+  color: var(--text-muted);
+}
+
+.api-usage-provider-chip-delete:hover {
+  color: var(--api-usage-bad);
+}
+
+.api-usage-settings-advanced {
+  border-top: 1px solid var(--api-usage-border);
+  margin-top: 12px;
+  padding-top: 10px;
+}
+
+.api-usage-settings-advanced summary {
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.api-usage-template-meta {
+  color: var(--text-muted);
+  display: grid;
+  font-size: 12px;
+  gap: 4px;
+  padding: 8px 0 0;
+}
+
+.api-usage-curl-input {
+  font-family: var(--font-monospace);
+  min-height: 120px;
+  resize: vertical;
+  width: min(100%, 640px);
+}
+
+@media (max-width: 760px) {
+  .api-usage-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .api-usage-actions {
+    justify-content: space-between;
+  }
+
+  .api-usage-stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .api-usage-pie-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .api-usage-donut {
+    justify-self: center;
+    max-width: 190px;
+  }
+}

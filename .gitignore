@@ -1,0 +1,28 @@
+node_modules/
+
+# Build and development noise
+*.map
+.eslintcache
+.DS_Store
+Thumbs.db
+
+# Local Obsidian/plugin state
+data.json
+.obsidian/
+
+# Secrets and private credentials
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.enc
+*secret*
+*credential*
+
+# Local logs and temporary files
+*.log
+tmp/
+temp/
+.cache/
